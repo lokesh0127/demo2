@@ -20,3 +20,10 @@ items[2].style.backgroundColor = "green"
 for(let i=0; i<items.length; i++){
     items[i].style.fontWeight = "bold "
 }
+
+for(let i=0; i<items.length; i++){
+    items[i].style.backgroundColor = "grey"
+}
+
+let list = document.getElementsByTagName("li")
+list[4].textContent = "Hello world"
