@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <form id="form">
+        <h2>BOOK A CALL</h2>
+          <label for="username">Name</label>
+          <input type="text" id="username" name="username" required />
+      
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+       
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" required />
+       
+        <input type="submit" value="Get a Call" />
+      </form>
+      <div id="user-list">
+        <!-- User details will be displayed here -->
+      </div>
+    </div>
+
+    <script>
+      function displayUserDetails() {
+        var userContainer = document.getElementById("user-list");
+        userContainer.innerHTML = ""; // Clear the previous content
+
+        var userDetails = JSON.parse(localStorage.getItem("userDetails")) || [];
+
+        userDetails.forEach(function (user, index) {
+          var userDiv = document.createElement("div");
+          userDiv.className = "user-entry";
+
+          var userInfo = `
+            <p>Name: ${user.username}</p>
+            <p>Email: ${user.email}</p>
+            <p>Phone: ${user.phone}</p> 
+            <button class="delete-button" data-index="${index}">Delete</button>
+        `;
+
+          userDiv.innerHTML = userInfo;
+          userContainer.appendChild(userDiv);
+        });
+
+        var deleteButtons = document.querySelectorAll(".delete-button");
+        deleteButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+            var index = parseInt(button.getAttribute("data-index"));
+            removeUserAtIndex(index);
+          });
+        });
+      }
+
+      // Function to remove a user at a specific index
+      function removeUserAtIndex(index) {
+        var userDetails = JSON.parse(localStorage.getItem("userDetails")) || [];
+
+        if (index >= 0 && index < userDetails.length) {
+          userDetails.splice(index, 1); // Remove the user at the specified index
+
+          // Update local storage with the modified data
+          localStorage.setItem("userDetails", JSON.stringify(userDetails));
+
+          // Re-display the user details on the UI
+          displayUserDetails();
+        }
+      }
+
+      displayUserDetails();
+
+      // Add an event listener to the form
+      document
+        .getElementById("form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault(); // Prevent the default form submission behavior
+
+          // Retrieve existing user details from local storage (if any)
+          var existingUserDetails =
+            JSON.parse(localStorage.getItem("userDetails")) || [];
+
+          // Get user input values
+          var username = document.getElementById("username").value;
+          var email = document.getElementById("email").value;
+          var phone = document.getElementById("phone").value;
+
+          // Create an object to store the current user's details
+          var userDetails = {
+            username: username,
+            email: email,
+            phone: phone,
+          };
+
+          // Append the new user's details to the existing data
+          existingUserDetails.push(userDetails);
+
+          localStorage.setItem(
+            "userDetails",
+            JSON.stringify(existingUserDetails)
+          );
+
+          // Re-display the user details on the UI
+          displayUserDetails();
+        });
+    </script>
+  </body>
+</html>
