@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // ========>>>> PROMISE
+
+        console.log(`Person1 : Shows Tickets`);
+        console.log(`Person2 : Shows Tickets`);
+
+        const wifeBringTickets = new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve("Tickets");
+          }, 3000);
+        });
+
+        const getPopcorn = wifeBringTickets.then(t => {
+          console.log(`Wife : I have the tickets `);
+          console.log(`Husband : let's go now `);
+          console.log(`Wife : No, I am hungry `);
+
+          return new Promise((resolve, reject) => resolve(`${t}, Popcorn`));
+        });
+
+        const getButter = getPopcorn.then(t => {
+          console.log(`Husband : Wait, I just bought some popcorn.`);
+          console.log(`Wife : Okay but I want some butter on the popcorn.`);
+          console.log(`Husband : Here are your butter popcorn.`);
+
+          return new Promise((resolve, reject) => resolve(`${t} Butter`));
+        });
+
+        const getColdDrinks = getButter.then(t => {
+          console.log(`Husband : Now we have to go in `);
+          console.log(`Wife : Wait I want cool drink also`);
+          console.log(`Husband : Here is your cold drink `);
+
+          return new Promise((resolve, reject) => resolve(`${t} and cold drink`));
+        });
+
+        getColdDrinks.then(t => console.log(t));
+
+        console.log(`Person4 : Shows Tickets`);
+        console.log(`Person5 : Shows Tickets`);
+
+      // =======>>>> ASYNC / AWAIT
+
+      console.log(`Person1 : Shows Tickets`);
+      console.log(`Person2 : Shows Tickets`);
+
+      async function movie() {
+        try {
+          const wifeBringTickets = await new Promise(resolve => {
+            setTimeout(() => {
+              resolve("Tickets");
+            }, 3000);
+          });
+
+          console.log(`Wife : I have the tickets `);
+          console.log(`Husband : let's go now `);
+          console.log(`Wife : No, I am hungry `);
+
+          const getPopcorn = await new Promise(resolve => {
+            resolve(`${wifeBringTickets}, Popcorn`);
+          });
+
+          console.log(`Husband : Wait, I just bought some popcorn.`);
+          console.log(`Wife : Okay but I want some butter on the popcorn.`);
+          console.log(`Husband : Here are your butter popcorn.`);
+
+          const getButter = await new Promise(resolve => {
+            resolve(`${getPopcorn} Butter`);
+          });
+
+          console.log(`Husband : Now we have to go in `);
+          console.log(`Wife : Wait I want cool drink also`);
+          console.log(`Husband : Here is your cold drink `);
+
+          const getColdDrinks = await new Promise(resolve => {
+            resolve(`${getButter} and cold drink`);
+          });
+
+          console.log(getColdDrinks);
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+
+      movie();
+      console.log(`Person4 : Shows Tickets`);
+      console.log(`Person5 : Shows Tickets`);
+    </script>
+  </body>
+</html>
