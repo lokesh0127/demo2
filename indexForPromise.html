@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+              // Function to simulate updating the user's last activity time
+      const updateLastUserActivityTime = () => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              const lastActivityTime = new Date();
+              resolve(lastActivityTime);
+            }, 1000);
+          });
+        };
+
+        // Function to simulate creating a post
+        const createPost = (content) => {
+          return new Promise((resolve) => {
+            // Simulate creating a post, you can replace this with your actual logic
+            const newPost = { content, timestamp: new Date() };
+            resolve(newPost);
+          });
+        };
+
+        // Function to simulate deleting a post
+        const deletePost = (postId) => {
+          return new Promise((resolve) => {
+            // Simulate deleting a post, you can replace this with your actual logic
+            const isDeleted = true; // Assume deletion is successful
+            resolve(isDeleted);
+          });
+        };
+
+        // Simulating the process as per your requirements
+        const simulateProcess = async () => {
+          try {
+            // Simulate creating a post
+            const newPost = await createPost("This is a new post."); // You can replace the content with your actual post content
+
+            // Update user's last activity time
+            const lastActivityTime = await updateLastUserActivityTime();
+
+            // Log posts and last activity time
+            console.log("All Posts:", [newPost]);
+            console.log("Last Activity Time:", lastActivityTime);
+
+            // Simulate deleting the last post
+            const postIdToDelete = newPost.id; // Assuming your post object has an 'id' property
+            const isPostDeleted = await deletePost(postIdToDelete);
+
+            if (isPostDeleted) {
+              console.log("Post Deleted Successfully!");
+
+              // Log remaining posts after deletion
+              console.log("Remaining Posts:", []);
+            } else {
+              console.log("Failed to delete the post.");
+            }
+          } catch (error) {
+            console.error("An error occurred:", error);
+          }
+        };
+
+        // Calling the function to simulate the process
+        simulateProcess();
+    </script>
+  </body>
+</html>
