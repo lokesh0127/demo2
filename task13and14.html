@@ -44,8 +44,8 @@
             <p>Name: ${user.username}</p>
             <p>Email: ${user.email}</p>
             <p>Phone: ${user.phone}</p> 
-            <button class="edit-button" data-index="${index}">Edit</button>
-            <button class="delete-button" data-index="${index}">Delete</button>
+            <button class="edit-button" data-index="${user._id}">Edit</button>
+            <button class="delete-button" data-index="${user._id}">Delete</button>
         `;
 
           userDiv.innerHTML = userInfo;
@@ -55,7 +55,7 @@
         var deleteButtons = document.querySelectorAll(".delete-button");
         deleteButtons.forEach(function (button) {
           button.addEventListener("click", function () {
-            var index = parseInt(button.getAttribute("data-index"));
+            var index = button.getAttribute("data-index");
             removeUserAtIndex(index);
           });
         });
@@ -63,7 +63,7 @@
         var editButtons = document.querySelectorAll(".edit-button");
         editButtons.forEach(function (button) {
           button.addEventListener("click", function () {
-            var index = parseInt(button.getAttribute("data-index"));
+            var index = button.getAttribute("data-index");
             editUserAtIndex(index);
           });
         });
@@ -92,21 +92,23 @@
 
       // Function to remove a user at a specific index
       async function removeUserAtIndex(index) {
-        var userDetails = JSON.parse(localStorage.getItem("userDetails")) || [];
+        // var userDetails = JSON.parse(localStorage.getItem("userDetails")) || [];
 
-        if (index >= 0 && index < userDetails.length) {
-          userDetails.splice(index, 1); // Remove the user at the specified index
+        // if (index >= 0 && index < userDetails.length) {
+        //   userDetails.splice(index, 1); // Remove the user at the specified index
 
         // Update local storage with the modified data
-        localStorage.setItem("userDetails", JSON.stringify(userDetails));
-        // await axios.delete(
-        //   `https://crudcrud.com/api/8d20a64cdf4a49a89e58ff9236578636/users/${index}`
-        // );
+        // localStorage.setItem("userDetails", JSON.stringify(userDetails));
+
+        await axios
+          .delete(
+            `https://crudcrud.com/api/8d20a64cdf4a49a89e58ff9236578636/users/${index}`
+          )
 
         // Re-display the user details on the UI
         displayUserDetails();
-        }
       }
+      // }
 
       displayUserDetails();
 
@@ -133,7 +135,7 @@
           };
 
           // Append the new user's details to the existing data
-          existingUserDetails.push(userDetails);
+          // existingUserDetails.push(userDetails);
 
           // localStorage.setItem(
           //   "userDetails",
@@ -144,21 +146,16 @@
             .post(
               "https://crudcrud.com/api/8d20a64cdf4a49a89e58ff9236578636/users",
               userDetails
-            )
-            .then(res => {
-              console.log(res.data);
-            })
-            .catch(err => {
-              console.log(err);
-            });
-
+              );
+              
+          displayUserDetails();
+              
           // Clear the input fields
           document.getElementById("username").value = "";
           document.getElementById("email").value = "";
           document.getElementById("phone").value = "";
 
           // Re-display the user details on the UI
-          displayUserDetails();
         });
     </script>
   </body>
