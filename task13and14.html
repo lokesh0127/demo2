@@ -26,6 +26,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
 
     <script>
+      let editId;
       async function displayUserDetails() {
         var userContainer = document.getElementById("user-list");
         userContainer.innerHTML = ""; // Clear the previous content
@@ -70,25 +71,35 @@
       }
 
       // Function to edit a user at a specific index
-      function editUserAtIndex(index) {
-        var userDetails = JSON.parse(localStorage.getItem("userDetails")) || [];
+      async function editUserAtIndex(index) {
+        console.log(index);
 
-        if (index >= 0 && index < userDetails.length) {
-          var userToEdit = userDetails[index];
+        let getData = await axios.get(
+          "https://crudcrud.com/api/8d20a64cdf4a49a89e58ff9236578636/users"
+        );
+        let userDetails = getData.data;
 
-          // Populate the input fields with the user's data
-          document.getElementById("username").value = userToEdit.username;
-          document.getElementById("email").value = userToEdit.email;
-          document.getElementById("phone").value = userToEdit.phone;
+        let userToEdit = userDetails.find(user => user._id === index);
+        console.log(userToEdit);
+        // var userDetails = JSON.parse(localStorage.getItem("userDetails")) || [];
 
-          // Remove the user from local storage
-          userDetails.splice(index, 1);
-          localStorage.setItem("userDetails", JSON.stringify(userDetails));
+        // if (index >= 0 && index < userDetails.length) {
+        //   var userToEdit = userDetails[index];
 
-          // Re-display the user details on the UI
-          displayUserDetails();
-        }
+        // Populate the input fields with the user's data
+        document.getElementById("username").value = userToEdit.username;
+        document.getElementById("email").value = userToEdit.email;
+        document.getElementById("phone").value = userToEdit.phone;
+
+        // Remove the user from local storage
+        // userDetails.splice(index, 1);
+        // localStorage.setItem("userDetails", JSON.stringify(userDetails));
+
+        // Re-display the user details on the UI
+        displayUserDetails();
+        editId = index;
       }
+      // }
 
       // Function to remove a user at a specific index
       async function removeUserAtIndex(index) {
@@ -100,10 +111,9 @@
         // Update local storage with the modified data
         // localStorage.setItem("userDetails", JSON.stringify(userDetails));
 
-        await axios
-          .delete(
-            `https://crudcrud.com/api/8d20a64cdf4a49a89e58ff9236578636/users/${index}`
-          )
+        await axios.delete(
+          `https://crudcrud.com/api/8d20a64cdf4a49a89e58ff9236578636/users/${index}`
+        );
 
         // Re-display the user details on the UI
         displayUserDetails();
@@ -142,20 +152,26 @@
           //   JSON.stringify(existingUserDetails)
           // );
 
-          await axios
-            .post(
+          if (editId) {
+            await axios.put(
+              `https://crudcrud.com/api/8d20a64cdf4a49a89e58ff9236578636/users/${editId}`,
+              userDetails
+            );
+            editId = null;
+          } else {
+            await axios.post(
               "https://crudcrud.com/api/8d20a64cdf4a49a89e58ff9236578636/users",
               userDetails
-              );
-              
-          displayUserDetails();
-              
+            );
+          }
+
           // Clear the input fields
           document.getElementById("username").value = "";
           document.getElementById("email").value = "";
           document.getElementById("phone").value = "";
 
           // Re-display the user details on the UI
+          displayUserDetails();
         });
     </script>
   </body>
